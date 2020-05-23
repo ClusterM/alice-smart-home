@@ -1,0 +1,18 @@
+{
+    "name": "Компьютер",
+    "description": "Основной компьютер",
+    "room": "Моя комната",
+    "type": "devices.types.switch",
+    "capabilities": [
+        {
+            "type": "devices.capabilities.on_off",
+            "retrievable": true
+        }
+    ],
+    "device_info": {
+        "manufacturer": "Cluster",
+        "model": "0",
+        "hw_version": "1.0",
+        "sw_version": "1.0"
+    }
+}
