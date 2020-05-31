@@ -6,6 +6,7 @@ from flask import request
 from flask import render_template
 from flask import send_from_directory
 from flask import redirect
+from flask import jsonify
 import sys
 import os
 import requests
@@ -151,7 +152,7 @@ def token():
         f.write(last_code_user.encode('utf-8'))
     logger.info("access granted", extra={'remote_addr': request.remote_addr, 'user': last_code_user})
     # Return just token without any expiration time
-    return {'access_token': access_token}
+    return jsonify({'access_token': access_token})
 
 # Just placeholder for root
 @app.route('/')
@@ -173,7 +174,7 @@ def unlink():
     if os.path.isfile(access_token_file) and os.access(access_token_file, os.R_OK):
         os.remove(access_token_file)
         logger.debug("token %s revoked", access_token, extra={'remote_addr': request.remote_addr, 'user': user_id})
-    return {'request_id': request_id}
+    return jsonify({'request_id': request_id})
 
 # Devices list
 @app.route('/v1.0/user/devices', methods=['GET'])
@@ -192,7 +193,7 @@ def devices_list():
         devices.append(device)
     result = {'request_id': request_id, 'payload': {'user_id': user_id, 'devices': devices}}
     logger.debug("devices response: \r\n%s", json.dumps(result, indent=4), extra={'remote_addr': request.remote_addr, 'user': user_id})
-    return result
+    return jsonify(result)
 
 # Method to query current device status
 @app.route('/v1.0/user/devices/query', methods=['POST'])
@@ -235,7 +236,7 @@ def query():
             })
         result['payload']['devices'].append(new_device)
     logger.debug("query response: \r\n%s", json.dumps(result, indent=4), extra={'remote_addr': request.remote_addr, 'user': user_id})
-    return result
+    return jsonify(result)
 
 # Method to execute some action with devices
 @app.route('/v1.0/user/devices/action', methods=['POST'])
@@ -278,4 +279,4 @@ def action():
             })
         result['payload']['devices'].append(new_device)
     logger.debug("action response: \r\n%s", json.dumps(result, indent=4), extra={'remote_addr': request.remote_addr, 'user': user_id})
-    return result
+    return jsonify(result)
