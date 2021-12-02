@@ -1,4 +1,7 @@
+import logging
 import subprocess
+
+logger = logging.getLogger()
 
 def pc_query(capability_type, instance):
     if capability_type == "devices.capabilities.on_off":
@@ -9,7 +12,9 @@ def pc_query(capability_type, instance):
 def pc_action(capability_type, instance, value, relative):
     if capability_type == "devices.capabilities.on_off":
         if value:
+            logger.debug("sending WoL to PC")
             subprocess.run(["wakeonlan", "-i", "192.168.0.255", "00:11:22:33:44:55"])
         else:
+            logger.debug("sending shutdown command to PC")
             subprocess.run(["sh", "-c", "echo shutdown -h | ssh clust@192.168.0.2"])
         return "DONE"
