@@ -4,7 +4,7 @@ def pc_query(capability_type, instance):
     if capability_type == "devices.capabilities.on_off":
         p = subprocess.run(["ping", "-c", "1", "192.168.0.2"], stdout=subprocess.PIPE)
         state = p.returncode == 0
-        return state
+        return state, "on" # State and instance
 
 def pc_action(capability_type, instance, value, relative):
     if capability_type == "devices.capabilities.on_off":
