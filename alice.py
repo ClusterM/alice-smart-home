@@ -146,9 +146,8 @@ def auth():
             logger.info("code generated")
             return redirect(request.args["redirect_uri"] + '?' + urllib.parse.urlencode(params))
     except:
-        ex_type, ex_value, ex_traceback = sys.exc_info()       
-        logger.error(f"Exception {ex_type.__name__}: {ex_value}\r\n{traceback.format_exc()}")
-        return f"Exception {ex_type.__name__}: {ex_value}", 500
+        logger.error(traceback.format_exc())
+        return f"Error {type(ex).__name__}: {str(ex)}", 500
 
 # OAuth, token request
 @app.route('/token/', methods=['POST'])
@@ -180,9 +179,8 @@ def token():
         # Return just token without any expiration time
         return jsonify({'access_token': access_token})
     except:
-        ex_type, ex_value, ex_traceback = sys.exc_info()       
-        logger.error(f"Exception {ex_type.__name__}: {ex_value}\r\n{traceback.format_exc()}")
-        return f"Exception {ex_type.__name__}: {ex_value}", 500
+        logger.error(traceback.format_exc())
+        return f"Error {type(ex).__name__}: {str(ex)}", 500
 
 # Just placeholder for root
 @app.route('/')
@@ -207,9 +205,8 @@ def unlink():
             logger.info(f"token {access_token} revoked", access_token)
         return jsonify({'request_id': request_id})
     except:
-        ex_type, ex_value, ex_traceback = sys.exc_info()       
-        logger.error(f"Exception {ex_type.__name__}: {ex_value}\r\n{traceback.format_exc()}")
-        return f"Exception {ex_type.__name__}: {ex_value}", 500
+        logger.error(traceback.format_exc())
+        return f"Error {type(ex).__name__}: {str(ex)}", 500
 
 # Devices list
 @app.route('/v1.0/user/devices', methods=['GET'])
@@ -231,9 +228,8 @@ def devices_list():
         logger.debug(f"devices response #{request_id}: \r\n{json.dumps(result, indent=4)}")
         return jsonify(result)
     except Exception as ex:
-        ex_type, ex_value, ex_traceback = sys.exc_info()       
-        logger.error(f"Exception {ex_type.__name__}: {ex_value}\r\n{traceback.format_exc()}")
-        return f"Exception {ex_type.__name__}: {ex_value}", 500
+        logger.error(traceback.format_exc())
+        return f"Error {type(ex).__name__}: {str(ex)}", 500
 
 # Method to query current device status
 @app.route('/v1.0/user/devices/query', methods=['POST'])
@@ -285,9 +281,8 @@ def query():
         logger.debug(f"query response #{request_id}: \r\n{json.dumps(result, indent=4)}")
         return jsonify(result)
     except Exception as ex:
-        ex_type, ex_value, ex_traceback = sys.exc_info()       
-        logger.error(f"Exception {ex_type.__name__}: {ex_value}\r\n{traceback.format_exc()}")
-        return f"Exception {ex_type.__name__}: {ex_value}", 500
+        logger.error(traceback.format_exc())
+        return f"Error {type(ex).__name__}: {str(ex)}", 500
 
 # Method to execute some action with devices
 @app.route('/v1.0/user/devices/action', methods=['POST'])
@@ -331,8 +326,7 @@ def action():
                         }
                     })
                 except Exception as ex:
-                    ex_type, ex_value, ex_traceback = sys.exc_info()
-                    logger.error(f"Exception {ex_type.__name__}: {ex_value}\r\n{traceback.format_exc()}")
+                    logger.error(traceback.format_exc())
                     new_device['capabilities'].append({
                         'type': capability['type'],
                         'state': {
@@ -340,7 +334,7 @@ def action():
                             "action_result": {
                                 "status": "ERROR",
                                 "error_code": "INTERNAL_ERROR",
-                                "error_message": f"Exception {ex_type.__name__}: {ex_value}\r\n{traceback.format_exc()}"
+                                "error_message": f"{type(ex).__name__}: {str(ex)}"
                             }
                         }
                     })
@@ -348,6 +342,5 @@ def action():
         logger.debug(f"action response #{request_id}: \r\n{json.dumps(result, indent=4)}")
         return jsonify(result)
     except Exception as ex:
-        ex_type, ex_value, ex_traceback = sys.exc_info()
-        logger.error(f"Exception {ex_type.__name__}: {ex_value}\r\n{traceback.format_exc()}")
-        return f"Exception {ex_type.__name__}: {ex_value}", 500
+        logger.error(traceback.format_exc())
+        return f"Error {type(ex).__name__}: {str(ex)}", 500
