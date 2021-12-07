@@ -273,7 +273,7 @@ def query():
                     value, instance = r
                 else:
                     value = r
-                logger.error(f"'instance' is empty for device {device['id']}, please set it in the JSON file or in the query method")
+                if not instance: logger.error(f"'instance' is empty for device {device['id']}, please set it in the JSON file or in the query method")
                 new_device['capabilities'].append({
                     'type': capability_type,
                     'state': {
@@ -348,6 +348,6 @@ def action():
         logger.debug(f"action response #{request_id}: \r\n{json.dumps(result, indent=4)}")
         return jsonify(result)
     except Exception as ex:
-        ex_type, ex_value, ex_traceback = sys.exc_info()       
+        ex_type, ex_value, ex_traceback = sys.exc_info()
         logger.error(f"Exception {ex_type.__name__}: {ex_value}\r\n{traceback.format_exc()}")
         return f"Exception {ex_type.__name__}: {ex_value}", 500
