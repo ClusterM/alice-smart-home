@@ -255,7 +255,9 @@ def query():
             # Load device module
             device_module = importlib.import_module(device['id'])
             # Get query method
-            query_method = getattr(device_module, device["id"] + "_query")
+            query_method = getattr(device_module, "query", None)
+            if not query_method: query_method = getattr(device_module, device['id'] + "_query", None)
+            if not query_method: raise NotImplementedError(f"Neither \"query\" nor \"{device['id'] + '_query'}\" method was found in {device['id']} module")
             # Call it for every requested capability
             for capability in device_info['capabilities']:
                 # But skip it if it's not retrievable
@@ -306,7 +308,9 @@ def action():
             # Load device module
             device_module = importlib.import_module(device['id'])
             # Get action method
-            action_method = getattr(device_module, device["id"] + "_action")
+            action_method = getattr(device_module, "action", None)
+            if not action_method: action_method = getattr(device_module, device['id'] + "_action", None)
+            if not action_method: raise NotImplementedError(f"Neither \"action\" nor \"{device['id'] + '_action'}\" method was found in {device['id']} module")
             # Call it for every requested capability
             for capability in device['capabilities']:
                 # Pass parameters: capability type, instance, new value and relative parameter (if any)
