@@ -60,7 +60,7 @@
     }
 }
 ```
-* Создайте файл _имя-устройства_.py в директории __devices__ и напишите Python скрипт с двумя методами: *имя-устройства*_query(capability_type, instance) и *имя-устройства*_command(capability_type, instance, value, relative)
+* Создайте файл _имя-устройства_.py в директории __devices__ и напишите Python скрипт с двумя методами: *query(capability_type, instance) и *command(capability_type, instance, value, relative)
 
 Пример скрипта для включения/выключения компьютера:
 ```python
@@ -70,7 +70,8 @@ def pc_query(capability_type, instance):
     if capability_type == "devices.capabilities.on_off":
         p = subprocess.run(["ping", "-c", "1", "192.168.0.2"], stdout=subprocess.PIPE)
         state = p.returncode == 0
-        return state
+        # Возвращаем состояние и опционально instance 
+        return state, "on"
 
 def pc_action(capability_type, instance, value, relative):
     if capability_type == "devices.capabilities.on_off":
@@ -80,7 +81,7 @@ def pc_action(capability_type, instance, value, relative):
             subprocess.run(["sh", "-c", "echo shutdown -h | ssh clust@192.168.0.2"])
         return "DONE"
 ```
-Первая функция должна возвращать текущее состояние устройства, а вторая используется для управления им. В параметрах __capability_type__ и __instance__ передаётся, чем мы управляем, а в параметрах __value__ и __relative__ само значение. Подробности опять же смотрите в документации Яндекса.
+Первая функция должна возвращать текущее состояние устройства и опционально __instance__ (если он не указан ни в запросе, ни в описании устройства), а вторая используется для управления им. В параметрах __capability_type__ и __instance__ передаётся, чем мы управляем, а в параметрах __value__ и __relative__ само значение. Подробности опять же смотрите в документации Яндекса.
 
 * Откройте вкладку "Тестирование" в панели управления Яндекс диалогами и попробуйте связать аккаунты, используя ваши имя пользователя и пароль
 * Проверяйте, должно работать как в панели для тестирования, так и на всех устройствах привязанных к вашему аккаунту
