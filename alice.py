@@ -145,7 +145,7 @@ def auth():
                       'client_id': config.CLIENT_ID}
             logger.info("code generated")
             return redirect(request.args["redirect_uri"] + '?' + urllib.parse.urlencode(params))
-    except:
+    except Exception as ex:
         logger.error(traceback.format_exc())
         return f"Error {type(ex).__name__}: {str(ex)}", 500
 
@@ -178,7 +178,7 @@ def token():
         logger.info("access granted")
         # Return just token without any expiration time
         return jsonify({'access_token': access_token})
-    except:
+    except Exception as ex:
         logger.error(traceback.format_exc())
         return f"Error {type(ex).__name__}: {str(ex)}", 500
 
@@ -204,7 +204,7 @@ def unlink():
             os.remove(access_token_file)
             logger.info(f"token {access_token} revoked", access_token)
         return jsonify({'request_id': request_id})
-    except:
+    except Exception as ex:
         logger.error(traceback.format_exc())
         return f"Error {type(ex).__name__}: {str(ex)}", 500
 
